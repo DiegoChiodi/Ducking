@@ -15,6 +15,8 @@ const DASH_DURING = 0.3
 var cowdow_dash = 0.0
 #Cenas
 var cenShadow = preload('res://Scenes/shadow.tscn')
+#Shadow
+const shadowsCreate = 3
 
 func _physics_process(delta: float) -> void:
 	# Input horizontal
@@ -31,38 +33,38 @@ func _physics_process(delta: float) -> void:
 		velocity.y = direction_y * SPEED * 1.25
 		velocity.x = direction_x * SPEED * 1.25
 		per_grav = false
-		$Duck.scale = Vector2(1.1,0.9) #efeito visual
+		$aniDuck.scale = Vector2(1.1,0.9) #efeito visual
+		$timShadow.start()
 	if inDash:
 		cowdow_dash += 1 * delta
-		
-		#var insShadow = cenShadow.instantiate()
-		#add_child(insShadow)
 		
 		if cowdow_dash >= DASH_DURING:
 			inDash = false
 			per_grav = true
-			
+			$timShadow.stop()
+			scenShadowCreate()
+		
 	else:
 		if direction_x:
 			# Movimento horizontal
 			velocity.x = direction_x * SPEED
-			$Duck.play("run")
+			$aniDuck.play("run")
 			# Efeito de balanço senoidal
 			time_passed += delta * 8.0  # Velocidade do balanço
 			var angle := sin(time_passed) * 8.0  # Oscila entre -10 e +10 graus
-			$Duck.rotation_degrees = angle
+			$aniDuck.rotation_degrees = angle
 
 			# Flip horizontal
-			$Duck.flip_h = direction_x < 0
-			$Duck.scale = Vector2.ONE  # Volta ao tamanho
+			$aniDuck.flip_h = direction_x < 0
+			$aniDuck.scale = Vector2.ONE  # Volta ao tamanho
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
-			$Duck.frame = 2
-			$Duck.stop()
+			$aniDuck.frame = 2
+			$aniDuck.stop()
 		# Reset ao parar
 			time_passed = 0.0
-			$Duck.rotation_degrees = 0.0
-			$Duck.scale = Vector2.ONE  # Volta ao tamanho
+			$aniDuck.rotation_degrees = 0.0
+			$aniDuck.scale = Vector2.ONE  # Volta ao tamanho
 	
 	if ground:
 		dash = true
@@ -79,3 +81,18 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP_VELOCITY
 		jumps -= 1
 	move_and_slide()
+
+func _on_tim_shadow_timeout() -> void:
+	scenShadowCreate()
+	
+func scenShadowCreate():
+	var insShadow = cenShadow.instantiate()
+	var anim = $aniDuck.animation
+	var frame = $aniDuck.frame
+	var frame_size = $aniDuck.sprite_frames.get_frame_texture(anim, frame).get_size()
+
+	insShadow.position = position + frame_size
+
+	insShadow.scale.x = scale.x * (1 - int($aniDuck.flip_h) * 2)
+	insShadow.scale.y = scale.y
+	get_tree().current_scene.add_child(insShadow)
