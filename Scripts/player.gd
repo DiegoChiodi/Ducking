@@ -13,6 +13,8 @@ var dash = true
 var inDash = false
 const DASH_DURING = 0.3
 var cowdow_dash = 0.0
+#Cenas
+var cenShadow = preload('res://Scenes/shadow.tscn')
 
 func _physics_process(delta: float) -> void:
 	# Input horizontal
@@ -32,9 +34,14 @@ func _physics_process(delta: float) -> void:
 		$Duck.scale = Vector2(1.1,0.9) #efeito visual
 	if inDash:
 		cowdow_dash += 1 * delta
+		
+		#var insShadow = cenShadow.instantiate()
+		#add_child(insShadow)
+		
 		if cowdow_dash >= DASH_DURING:
 			inDash = false
 			per_grav = true
+			
 	else:
 		if direction_x:
 			# Movimento horizontal

@@ -1,8 +1,24 @@
-[gd_scene load_steps=6 format=3 uid="uid://ogs1wfatbyvc"]
+[gd_scene load_steps=7 format=3 uid="uid://ogs1wfatbyvc"]
 
 [ext_resource type="Texture2D" uid="uid://bsrnxscqorcsj" path="res://Art Assets/Background/Sky.png" id="1_5a7ea"]
 [ext_resource type="Texture2D" uid="uid://de7narteij36p" path="res://Art Assets/Tiles/Tiles (16x16).png" id="2_8j60k"]
 [ext_resource type="PackedScene" uid="uid://ls5ife08vbxd" path="res://Scenes/Player.tscn" id="3_fo5ed"]
+
+[sub_resource type="GDScript" id="GDScript_5a7ea"]
+script/source = "extends Node2D
+
+var cenShadow = preload('res://Scenes/shadow.tscn')
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var insShadow = cenShadow.instantiate()
+	add_child(insShadow)
+"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_aqk2v"]
 texture = ExtResource("2_8j60k")
@@ -60,6 +76,7 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_aqk2v")
 
 [node name="World" type="Node2D"]
+script = SubResource("GDScript_5a7ea")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_right = 1152.0

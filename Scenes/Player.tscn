@@ -1,7 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://ls5ife08vbxd"]
 
-[ext_resource type="Script" uid="uid://027vn64xu40r" path="res://Scenes/player.gd" id="1_kyqiw"]
+[ext_resource type="Script" uid="uid://027vn64xu40r" path="res://Scripts/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://b2miipul4suwm" path="res://Art Assets/Characters/Duck/Duck (16x16).png" id="1_xhfnw"]
+[ext_resource type="PackedScene" uid="uid://5i07xf7eudba" path="res://Scenes/shadow.tscn" id="3_gntrk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xhfnw"]
 size = Vector2(16, 16)
@@ -33,16 +34,11 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_kyqiw"]
-animations = [{
-"frames": [],
-"loop": true,
-"name": &"run",
-"speed": 5.0
-}]
-
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_kyqiw")
+
+[node name="Node2D" parent="." instance=ExtResource("3_gntrk")]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(8, 8)
@@ -58,7 +54,3 @@ position = Vector2(8, 8)
 sprite_frames = SubResource("SpriteFrames_dewec")
 animation = &"run"
 autoplay = "run"
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_kyqiw")
-animation = &"run"
