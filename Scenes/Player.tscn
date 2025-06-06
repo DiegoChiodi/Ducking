@@ -1,11 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://ls5ife08vbxd"]
+[gd_scene load_steps=9 format=3 uid="uid://ls5ife08vbxd"]
 
 [ext_resource type="Script" uid="uid://027vn64xu40r" path="res://Scripts/player.gd" id="1_kyqiw"]
 [ext_resource type="Texture2D" uid="uid://b2miipul4suwm" path="res://Art Assets/Characters/Duck/Duck (16x16).png" id="1_xhfnw"]
+[ext_resource type="Script" uid="uid://xikhvqvy4e4x" path="res://Scripts/cameraShake.gd" id="3_dewec"]
 [ext_resource type="PackedScene" uid="uid://5i07xf7eudba" path="res://Scenes/shadow.tscn" id="3_gntrk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xhfnw"]
-size = Vector2(16, 16)
+size = Vector2(6, 14)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dewec"]
 atlas = ExtResource("1_xhfnw")
@@ -40,14 +41,18 @@ script = ExtResource("1_kyqiw")
 [node name="nodShadow" parent="." instance=ExtResource("3_gntrk")]
 visible = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(8, 8)
+[node name="colPlayer" type="CollisionShape2D" parent="."]
+position = Vector2(7, 9)
 shape = SubResource("RectangleShape2D_xhfnw")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(8, 16)
 zoom = Vector2(1.5, 1.5)
 limit_left = 0
+limit_top = 0
 limit_right = 1152
+limit_bottom = 672
+script = ExtResource("3_dewec")
 
 [node name="aniDuck" type="AnimatedSprite2D" parent="."]
 position = Vector2(8, 8)
