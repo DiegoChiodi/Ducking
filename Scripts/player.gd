@@ -6,6 +6,7 @@ var time_passed := 0.0  # Tempo acumulado para gerar o efeito senoidal
 #MOVIMENTAÇÃO Y -----
 const JUMP_VELOCITY = -300.0
 const JUMPS_MAX = 1;
+var minyJump = false
 var jumps = JUMPS_MAX;
 var per_grav = true
 #Dash -----
@@ -19,6 +20,7 @@ var direction = 1
 var targetScale = Vector2.ONE
 #Cenas
 var cenShadow = preload('res://Scenes/shadow.tscn')
+var cenParticles = preload('res://Scenes/particles.tscn')
 #Shadow
 const shadowsCreate = 3
 #Draw
@@ -85,18 +87,27 @@ func _physics_process(delta: float) -> void:
 			else:
 				velocity += get_gravity() * delta
 				targetScale = Vector2(0.9, 1.1)  # subindo
-
+		else:
+			minyJump = true
 	# Handle jump.
-	if Input.is_action_just_pressed("move_up") and jumps > 0:
-		velocity.y = JUMP_VELOCITY
-		jumps -= 1
+	if Input.is_action_just_pressed("move_up"):
+		if jumps > 0:
+			velocity.y = JUMP_VELOCITY
+			jumps -= 1
+		elif minyJump:
+			velocity.y = JUMP_VELOCITY / 2
+			minyJump = false
+			createPart()
 	
 	# Interpola suavemente a escala para target_scale
 	$aniDuck.scale = $aniDuck.scale.lerp(targetScale, 8 * delta)
 	move_and_slide()
+
+
 func _on_tim_shadow_timeout() -> void:
 	scenShadowCreate()
-	
+
+
 func scenShadowCreate():
 	var insShadow = cenShadow.instantiate()
 	var anim = $aniDuck.animation
@@ -108,3 +119,10 @@ func scenShadowCreate():
 	insShadow.scale.x = scale.x * direction
 	insShadow.scale.y = scale.y
 	get_tree().current_scene.add_child(insShadow)
+
+func createPart():
+	for i in range(20):
+		var insParticle = cenParticles.instantiate()
+		insParticle.position = Vector2(randf_range(position.x, position.x + 20), position.y + 30)  # Posição X aleatória
+		get_tree().current_scene.add_child(insParticle)
+		
